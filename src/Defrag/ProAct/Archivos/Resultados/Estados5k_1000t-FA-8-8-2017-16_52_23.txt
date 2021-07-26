@@ -1,0 +1,2 @@
+bloqueo,entropia,msi,bfr,rutas,pathconsec,entropiauso,porcuso
+0,0.023,0.093,0.0,1,350.758,0.0,0.0
