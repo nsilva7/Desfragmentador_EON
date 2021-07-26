@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -624,7 +626,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(ComboMetodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 440, 140, -1));
 
-        ComboMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo" }));
+        ComboMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo", "IA" }));
         ComboMetodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboMetodoActionPerformed(evt);
@@ -1180,10 +1182,26 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
                     shf= Metricas.shf(G[a],capacidadPorEnlace);
                     Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso,shf,sumSlots, sumBlockedSlots,probBloqueo);
+                
+                }
+                
+                if(metodo == "IA") {
+                    
+                    try {
+                        double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
+                        System.out.println("ratio: " + ratio);
+                        if(ratio >= 0.2) {
+                            encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
+                        }
+                        
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
                 //no modificar 
                 if(metodo == "DT Fijo"){
+                   
                     if(i == ultimoDesfrag && i != tiempoTotal){// cada periodo y que no haga si es el ultimo tiempo
                         ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
                         try {

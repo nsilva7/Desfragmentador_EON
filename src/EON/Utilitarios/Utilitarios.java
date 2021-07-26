@@ -15,6 +15,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -3692,5 +3698,40 @@ public class Utilitarios {
                 }
             }
         }
+    }
+    
+    public static double getRatioIA(double entropy, double pc, double shf, double msi, double used, double blockedSlots, double bfr) throws MalformedURLException, ProtocolException, IOException {
+        double ratio = 0; 
+        String json = "{" + 
+                                  "\"entropy\": " + entropy + 
+                                 ",\"pc\":" + pc + 
+                                 ",\"shf\":" + shf  + 
+                                 ",\"msi\":" + msi + 
+                                 ",\"used\":" + used + 
+                                 ",\"blocked\":" + blockedSlots + 
+                                 ",\"bfr\":" + bfr + 
+                                 "}"; 
+        URL url = new URL("http://127.0.0.1:5000/estimador/ratio"); 
+        HttpURLConnection con = (HttpURLConnection) url.openConnection(); 
+        con.setRequestMethod("POST"); 
+        con.setRequestProperty("Content-type", "application/json"); 
+//        con.setRequestProperty("Accept", "application/json"); 
+        con.setDoOutput(true); 
+        con.setConnectTimeout(30000); 
+        try(OutputStream os = con.getOutputStream()) { 
+            byte[] input = json.getBytes("utf-8"); 
+            os.write(input, 0, input.length); 
+        } 
+        try(BufferedReader br = new BufferedReader( 
+                new InputStreamReader(con.getInputStream(), "utf-8"))) { 
+            StringBuilder response = new StringBuilder(); 
+            String responseLine; 
+            while ((responseLine = br.readLine()) != null) { 
+                response.append(responseLine.trim()); 
+            } 
+            ratio = Double.parseDouble(response.toString()); 
+        } 
+        return ratio; 
+         
     }
 }
