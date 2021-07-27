@@ -1896,10 +1896,10 @@ public class Utilitarios {
     lambda: valor para la distribucion de Poisson
     t: Tiempo de simulacion
     minFS y maxFS: Rango de variacion de cantidad de FS por demanda    */
-    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang) throws IOException {
+    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang, int cc, String topo) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_"+erlang+"Erlang_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_"+erlang+"Erlang_"+ lambda + "k_" + t + "cc_" + cc+ topo + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -2080,6 +2080,39 @@ public class Utilitarios {
         bw.write("" + sumBlockedSlots);
         bw.write(",");
         bw.write("" + redondearDecimales(probBloqueo, 6));
+        bw.write("\r\n");
+        bw.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return;
+    }
+    
+    public static void escribirArchivoEntrenamiento(File archivo, int tiempo, double entropia, double MSI, double BFR, double pathConsec, double porcUso,double shf, int sumSlots, int sumBlockedSlots){
+        BufferedWriter bw;
+        try {
+        if (archivo.exists()) {
+            bw = new BufferedWriter(new FileWriter(archivo, true));
+        } else {
+            bw = new BufferedWriter(new FileWriter(archivo));
+        }
+        bw.write("" + tiempo);
+        bw.write(",");
+        bw.write("" + redondearDecimales(entropia, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(MSI, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(BFR, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(pathConsec, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(porcUso, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(shf, 6));
+        bw.write(",");
+        bw.write("" + sumSlots);
+        bw.write(",");
+        bw.write("" + sumBlockedSlots);
         bw.write("\r\n");
         bw.close();
         }catch(IOException e){

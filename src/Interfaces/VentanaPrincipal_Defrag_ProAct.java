@@ -921,8 +921,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 prob[i] = new LinkedList(); // para cada algoritmo, se tiene una lista enlazada que almacenara la Pb 
                 // obtenidad en cada simulacion
             }
-
-            switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
+            
+            String[] topos = {"NSFNet","USNet"};
+            for(String top: topos){
+                System.out.println("---TOPOLOGÍA: " +  top + "---");
+                
+               for(int cc = 0; cc < 20; cc++){
+                   System.out.println("--CC: " + cc);
+                for(int er = 400; er <= 1000; er = er + 100 ){
+                    System.out.println("Erlangs: " +  er);
+                    Erlang = er;
+                    
+                    switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
                     topologia = this.Redes.getTopologia(0);
                     //de ´rueba no utilizado
@@ -953,12 +963,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(topologia, 24, 43);
-            }
-            
-            //generar archivo de demandas
+                }
+                    //generar archivo de demandas
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
-                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang);
+                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang,cc,top);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -975,18 +984,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Resultado"+detallesNombre;
             String rutaDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
             String rutaEstados = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Estados"+detallesNombre;
+            String rutaEntrenamiento = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Entrenamiento\\datos.csv";
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
             File archivoResultados = new File(ruta);
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
+            File archivoEntrenamiento = new File(rutaEntrenamiento);
             
             int sumaTiempoDeVida = 0;
             
             String algoritmoAejecutar = RSA.get(0);
             
-            for (int i = 1; i <= tiempoT; i++) {
+            for (int i = 1; i <= 1010; i++) {
                 haybloqueos = false;
                 sumSlots = sumBlockedSlots = 0;
 //                //imprimir estado de los enlaces
@@ -1181,8 +1192,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     porcUso = Metricas.PorcUsoGrafo(G[a]);
                     probBloqueo = Utilitarios.calcularProbabilidadDeBloqueo(entropia, msi, bfr, pathConsec, entropiaUso, porcUso, arrayRutas.size());
                     shf= Metricas.shf(G[a],capacidadPorEnlace);
-                    Utilitarios.escribirArchivoResultados(archivoResultados, i, contBloqueos, demandasPorUnidadTiempo.size(), entropia, msi, bfr, rutasEstablecidas.size(), pathConsec, entropiaUso,porcUso,shf,sumSlots, sumBlockedSlots,probBloqueo);
-                
+                    Utilitarios.escribirArchivoEntrenamiento(archivoEntrenamiento,i, entropia, msi, bfr, pathConsec,porcUso,shf,sumSlots, sumBlockedSlots);
+                    
                 }
                 
                 if(metodo == "IA") {
@@ -1247,6 +1258,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 contBloqueos = 0;
                 
             }
+               }
+            }
+            
+            }
+            
             ++k;
             /*Inicio de impresion de  los datos de los estadisticos de boqueos*/
             
@@ -1267,159 +1283,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             this.etiquetaError.setText("Simulacion Terminada...");
             
             //Si no existe escibir 0,0,0
-            if(!archivoDefrag.exists()){
-                        try {
-                            BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDefrag));
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write(",");
-                            bw.write("" + 0);
-                            bw.write("\r\n");
-                            bw.close();
-                        } catch (IOException ex) {
-                            Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                }
-            //RESULTADOS
-            
-            //suma de tiempos de vida
-            System.out.println("Suma de tiempos de vida: " + sumaTiempoDeVida);
-
-            // una vez finalizado, graficamos el resultado.
-            //leemos el archivo de resultados
-            List<XYTextAnnotation> annotation = new LinkedList<>();
-            String linea;
-            int contLinea = 0;
-            XYSeries series[] = new XYSeries[12];
-            
-            //tablas
-            DefaultTableModel modelBloqueos = (DefaultTableModel) this.jTableResultadosBloqueos.getModel(); //todos
-            DefaultTableModel modelResultados = (DefaultTableModel) this.jTableResultados.getModel(); //bloqueos
-
-            FileReader fr;
-            try {
-                fr = new FileReader(archivoResultados);
-                BufferedReader br = new BufferedReader(fr);
-                series[0] = new XYSeries("Bloqueos");
-                series[1] = new XYSeries("Entropía");
-                series[2] = new XYSeries("MSI");
-                series[3] = new XYSeries("BFR");
-                series[4] = new XYSeries("Cantidad de Light Paths");
-                series[5] = new XYSeries("Path Consecutiveness");
-                series[6] = new XYSeries("Entropía por su uso");
-                series[7] = new XYSeries("% Uso");
-                series[8] = new XYSeries("SHF");
-                series[9] = new XYSeries("SumSlots");
-                series[10] = new XYSeries("SumBlockedSlots");
-                series[11] = new XYSeries("Prob Bloqueo");
-
-                while (((linea = br.readLine()) != null)) {
-                    contLinea++;
-                    String[] line = linea.split(",", 14);
-                    
-                    //agrega a la tabla los Resultados
-                        modelResultados.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9]), (double) Double.parseDouble(line[10]),(int)Integer.parseInt(line[11]),(int)Integer.parseInt(line[12]), (double) Double.parseDouble(line[13])});
-                    
-                    //agrega en annotation todos los bloqueos para después agregarlos a los gráficos
-                    if ((double) Double.parseDouble(line[2]) > 0) {
-                        annotation.add(new XYTextAnnotation(line[2], (double) Double.parseDouble(line[0]), 0.02));
-                        //agrega a la tabla los bloqueos
-                        modelBloqueos.addRow(new Object[]{line[0], line[1], line[2], (double) Double.parseDouble(line[3]), (double) Double.parseDouble(line[4]), (double) Double.parseDouble(line[5]), (double) Double.parseDouble(line[6]), (double) Double.parseDouble(line[7]), (double) Double.parseDouble(line[8]), (double) Double.parseDouble(line[9]), (double) Double.parseDouble(line[10]),(int)Integer.parseInt(line[11]),(int)Integer.parseInt(line[12]), (double) Double.parseDouble(line[13])});
-                    }
-
-                    series[0].add(contLinea, (double) Double.parseDouble(line[2]));
-                    series[1].add(contLinea, (double) Double.parseDouble(line[3]));
-                    series[2].add(contLinea, (double) Double.parseDouble(line[4]));
-                    series[3].add(contLinea, (double) Double.parseDouble(line[5]));
-                    series[4].add(contLinea, (double) Double.parseDouble(line[6]));
-                    series[5].add(contLinea, (double) Double.parseDouble(line[7]));
-                    series[6].add(contLinea, (double) Double.parseDouble(line[8]));
-                    series[7].add(contLinea, (double) Double.parseDouble(line[9]));
-                    series[8].add(contLinea, (double) Double.parseDouble(line[10]));
-                    series[9].add(contLinea, (int)Integer.parseInt(line[11]));
-                    series[10].add(contLinea, (int)Integer.parseInt(line[12]));
-                    series[11].add(contLinea, (double) Double.parseDouble(line[13]));
-                }
-                
-                //hallar el max y min de los resultados
-                guardarMaxMin(this.jTableResultados, this.jTableResultadosMinMax);
-                
-                //hallar el max y min de los bloqueos
-                if (contB[0]!=0){
-                    guardarMaxMin(this.jTableResultadosBloqueos, this.jTableResultadosBloqueosMinMax);
-                }
-                
-                //graficar
-                Utilitarios.GraficarResultado(series, annotation, this.panelResultados);
-                
-                //estado final de los enlaces
-//                Utilitarios.actualizarTablaEstadoEnlaces(G[0], jTableResultados, capacidadPorEnlace);
-
-
-            } catch (IOException ioe) {
-                Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ioe);  
-            }
             
             
             
-            //tabla desfragmentaciones
-            //solo si fue ACO porque peores rutas no guarda en el archivo, escribe directamente al terminar
-            if (metodoDesfrag == "ACO"){
-                Integer[] resultDefrags = new Integer[2];
-                String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
-                File archivoResultadosDefrag = new File(rutaResultadosDefrag);
-                try {
-                    resultDefrags = Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
-                } catch (IOException ex) {
-                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                //imprime los resultados en la pantalla
-                this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
-                this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);                
-            }
-            if(metodoDesfrag == "AG"){
-                Integer[] resultDefrags = new Integer[2];
-                String rutaResultadosDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
-                File archivoResultadosDefrag = new File(rutaResultadosDefrag);
-                try {
-                    resultDefrags = Utilitarios.cargarTablaResultadosDefrag(archivoResultadosDefrag, this.jTableResultadosDefrag);
-                } catch (IOException ex) {
-                    Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                //imprime los resultados en la pantalla
-                this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
-                this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);
-            }
             
-
-
-            //Utilitarios.GraficarResultado(prob, this.panelResultado, "Resultado de la Simulación", RSA, paso);
-            String demandasTotales = "" + contD; // mostramos la cantidad de demandas totales recibidas
-            this.etiquetaDemandasTotales.setText(demandasTotales);
-            this.etiquetaBloqueosTotales.setText("" + contB[0]);
-            this.etiquetaTextoBloqueosTotales.setVisible(true);
-            this.etiquetaDemandasTotales.setVisible(true);
-            this.etiquetaTextoDemandasTotales.setVisible(true);
-            this.etiquetaBloqueosTotales.setVisible(true);
-            this.etiquetaTextoCantDesfrag.setVisible(true);
-            this.etiquetaCantDesfrag.setVisible(true);
-            this.etiquetaTextoCantRutasReruteadas.setVisible(true);
-            this.etiquetaCantRutasReruteadas.setVisible(true);
-
-            ////////Vaciar listas para las siguientes simulaciones///////////////
-            /////////////////////////////////////////////////////////////////////
-            //this.algoritmosCompletosParaEjecutar.clear();
-            //this.algoritmosCompletosParaGraficar.clear();
-            //this.cantidadDeAlgoritmosRuteoSeleccionados = 0;
-            this.cantidadDeAlgoritmosTotalSeleccionados = 0;
-
         } else { // control de errores posibles realizados al no completar los parametros de simulacion
             if (this.listaAlgoritmosRuteo.getSelectedIndex() < 0) {
                 if (mensajeError == "Seleccione ") {
