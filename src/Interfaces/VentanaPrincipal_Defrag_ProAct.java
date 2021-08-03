@@ -922,14 +922,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 // obtenidad en cada simulacion
             }
             int cantidadBloqueos = 0;
-            //String[] topos = {"EUNet", "NSFNet", "USNet"};
-            String[] topos = {"NSFNet"};
+            tiempoTotal = 1010;
+            String[] topos = {"EUNet", "NSFNet", "USNet"};
+            //String[] topos = {"NSFNet"};
             for(String top: topos){
                 System.out.println("---TOPOLOGÍA: " +  top + "---");
                 
                for(int cc = 0; cc < 20; cc++){
                    System.out.println("--CC: " + cc);
-                for(int er = 400; er <= 700; er = er + 100 ){
+                for(int er = 400; er <= 1000; er = er + 100 ){
                     System.out.println("Erlangs: " +  er);
                     Erlang = er;
                     
