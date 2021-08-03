@@ -922,18 +922,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 // obtenidad en cada simulacion
             }
             int cantidadBloqueos = 0;
-            String[] topos = {"EUNet", "NSFNet", "USNet"};
-            //String[] topos = {"USNet"};
+            //String[] topos = {"EUNet", "NSFNet", "USNet"};
+            String[] topos = {"NSFNet"};
             for(String top: topos){
                 System.out.println("---TOPOLOGÍA: " +  top + "---");
                 
                for(int cc = 0; cc < 20; cc++){
                    System.out.println("--CC: " + cc);
-                for(int er = 400; er <= 1000; er = er + 100 ){
+                for(int er = 400; er <= 700; er = er + 100 ){
                     System.out.println("Erlangs: " +  er);
                     Erlang = er;
                     
-                    switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
+                    switch (top) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
                     topologia = this.Redes.getTopologia(0);
                     //de ´rueba no utilizado
@@ -1004,15 +1004,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
             File archivoEntrenamiento = new File(rutaEntrenamiento);
-            
+            ArrayList<Integer> slotsC = new ArrayList<>();
+            ArrayList<Integer> blockedSlots = new ArrayList<>();
             int sumaTiempoDeVida = 0;
             
             String algoritmoAejecutar = RSA.get(0);
             
             for (int i = 1; i <= 1010; i++) {
                 haybloqueos = false;
-                sumSlots = sumBlockedSlots = 0;
-//                //imprimir estado de los enlaces
+                  //imprimir estado de los enlaces
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
 
@@ -1035,12 +1035,36 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         switch (algoritmoAejecutar) {
                             case "FA":
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
+                                
+                                
+                                if(slotsC.size() == 10){
+                                        slotsC.remove(0);
+                                        blockedSlots.remove(0);
+                                }
+                                slotsC.add(demanda.getNroFS());
+                                if(r == null)
+                                    blockedSlots.add(demanda.getNroFS());
+                                else
+                                    blockedSlots.add(0);
+
+                                sumSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumSlots += slotsC.get(k2);
+
+                                sumBlockedSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumBlockedSlots += blockedSlots.get(k2);
+                                
+                                
                                 if (r != null) {//si se pudo establecer la demanda
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
                                     arrayRutas.add(ksp[r.getCamino()]);
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
+                                    
+                                    
+                                    
                                 } else {
                                     /*Inicio de creacion de estadistica de los bloqueos segun la cantidad de ranuras requeridas*/
                                     int cantidadRanurasRequeridas = demanda.getNroFS();
