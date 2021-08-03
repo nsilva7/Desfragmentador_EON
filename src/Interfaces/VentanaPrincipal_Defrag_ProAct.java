@@ -848,7 +848,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         /*vector para guardar los datos y establecer una estadistica de bloqueos 
         por cantidad de ranuras requeridas*/
         int tam=FsMaximo - FsMinimo +2;
-        int ranuras []= new int [tam];/*se toma el indice del vector como la cantidad de ranura
+        int ranuras []= new int [9];/*se toma el indice del vector como la cantidad de ranura
          en ella se guardan la suma de los bloqueos para cada ranura */
         int cantidadTotalBloqueos =0;
         /*fin de la declaracion para datos estadisticos de bloqueo*/
@@ -921,8 +921,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 prob[i] = new LinkedList(); // para cada algoritmo, se tiene una lista enlazada que almacenara la Pb 
                 // obtenidad en cada simulacion
             }
-            
-            String[] topos = {"NSFNet","USNet"};
+            int cantidadBloqueos = 0;
+            String[] topos = {"EUNet", "NSFNet", "USNet"};
+            //String[] topos = {"USNet"};
             for(String top: topos){
                 System.out.println("---TOPOLOGÍA: " +  top + "---");
                 
@@ -956,6 +957,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(topologia, 21, 26);
+                    break;
                 case "USNet":
                     topologia = this.Redes.getTopologia(3);
                     for (int i = 0; i < RSA.size(); i++) {
@@ -963,6 +965,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         G[i].insertarDatos(topologia);
                     }
                     caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(topologia, 24, 43);
+                    break;
+                    
+                case "EUNet":
+                    topologia = this.Redes.getTopologia(4);
+                    for (int i = 0; i < RSA.size(); i++) {
+                        G[i] = new GrafoMatriz(this.Redes.getRed(4).getCantidadDeVertices());
+                        G[i].insertarDatos(topologia);
+                    }
+                    caminosDeDosEnlaces = Utilitarios.hallarCaminosTomadosDeADos(topologia, 15, 23);    
+                    break;
                 }
                     //generar archivo de demandas
             try {
@@ -1031,7 +1043,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     listaKSP.add(ksp);
                                 } else {
                                     /*Inicio de creacion de estadistica de los bloqueos segun la cantidad de ranuras requeridas*/
-                                    
                                     int cantidadRanurasRequeridas = demanda.getNroFS();
                                     sumBlockedSlots += cantidadRanurasRequeridas;
                                     ranuras[cantidadRanurasRequeridas]+=1;
