@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1899,7 +1901,7 @@ public class Utilitarios {
     public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang, int cc, String topo) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_"+erlang+"Erlang_"+ lambda + "k_" + t + "cc_" + cc+ topo + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado"+ lambda + "k_" + t + "cc_" + cc+ topo + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -1907,8 +1909,18 @@ public class Utilitarios {
         if (archivo.exists()) {
             return archivo;
         } else {
+        Integer[] erlangs = {400,450,550,650,700};
+        List<Integer> erlangsList = Arrays.asList(erlangs);
+        Collections.shuffle(erlangsList);
+        int erlangVariado = erlangsList.get(0);
+        int cambioErlang = (t/erlangs.length);
+        HT = erlangVariado/lambda;
             Random rand = new Random();
             for (i = 1; i < t; i++) {
+                if(i % cambioErlang == 0){
+                   erlangVariado = erlangsList.get((int)Math.floor((double) (i)/cambioErlang));
+                   HT = erlangVariado/lambda; 
+                }
                 cantidadDemandas = poisson(lambda);
                 for (j = 0; j < cantidadDemandas; j++) {
                     rand = new Random();

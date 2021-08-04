@@ -930,9 +930,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 
                for(int cc = 0; cc < 20; cc++){
                    System.out.println("--CC: " + cc);
-                for(int er = 400; er <= 1000; er = er + 100 ){
-                    System.out.println("Erlangs: " +  er);
-                    Erlang = er;
                     
                     switch (top) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
@@ -1011,7 +1008,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             
             String algoritmoAejecutar = RSA.get(0);
             
-            for (int i = 1; i <= 1010; i++) {
+            for (int i = 1; i <= tiempoTotal; i++) {
                 haybloqueos = false;
                   //imprimir estado de los enlaces
 //                System.out.println("Grafo al empezar el tiempo: " + i);
@@ -1294,7 +1291,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 contBloqueos = 0;
                 
             }
-               }
+               
             }
             
             }
