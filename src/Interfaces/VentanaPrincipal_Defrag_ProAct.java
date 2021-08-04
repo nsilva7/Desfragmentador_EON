@@ -985,10 +985,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             int sumaTiempoDeVida = 0;
             
             String algoritmoAejecutar = RSA.get(0);
-            
+             ArrayList<Integer> slotsC = new ArrayList<>();
+            ArrayList<Integer> blockedSlots = new ArrayList<>();
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
-                sumSlots = sumBlockedSlots = 0;
+            
 //                //imprimir estado de los enlaces
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
@@ -1012,6 +1013,25 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         switch (algoritmoAejecutar) {
                             case "FA":
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
+                                if(slotsC.size() == 10){
+                                        slotsC.remove(0);
+                                        blockedSlots.remove(0);
+                                }
+                                slotsC.add(demanda.getNroFS());
+                                if(r == null)
+                                    blockedSlots.add(demanda.getNroFS());
+                                else
+                                    blockedSlots.add(0);
+
+                                sumSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumSlots += slotsC.get(k2);
+
+                                sumBlockedSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumBlockedSlots += blockedSlots.get(k2);
+                                
+
                                 if (r != null) {//si se pudo establecer la demanda
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
@@ -1022,7 +1042,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     /*Inicio de creacion de estadistica de los bloqueos segun la cantidad de ranuras requeridas*/
                                     
                                     int cantidadRanurasRequeridas = demanda.getNroFS();
-                                    sumBlockedSlots += cantidadRanurasRequeridas;
                                     ranuras[cantidadRanurasRequeridas]+=1;
                                     cantidadTotalBloqueos++;
                                     
@@ -1077,7 +1096,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                 } else {
-                                    sumBlockedSlots += demanda.getNroFS();
                                     if(metodo == "Reactivo" && noLogroEvitar<i){
                                         try {
                                             if (metodoDesfrag == "ACO"){
@@ -1126,7 +1144,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     arrayRutas.add(ksp[r.getCamino()]);
                                     resultadoRuteo.add(r);
                                 } else {
-                                    sumBlockedSlots += demanda.getNroFS();
+                                    
                                     contB[a]++;
                                     contBloqueos++;
                                     esBloqueo = true;
@@ -1190,7 +1208,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     try {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
                         System.out.println("ratio: " + ratio);
-                        if(ratio >= 0.2) {
+                        if(ratio >= 0.22) {
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }
                         
