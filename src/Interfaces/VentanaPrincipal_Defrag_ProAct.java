@@ -101,7 +101,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane2 = new javax.swing.JScrollPane();
-        listaAlgoritmosRuteo = new javax.swing.JList<>();
+        listaAlgoritmosRuteo = new javax.swing.JList<String>();
         botonEjecutarSimulacion = new javax.swing.JButton();
         etiquetaTopologia = new javax.swing.JLabel();
         etiquetaCapacidadActual = new javax.swing.JLabel();
@@ -115,7 +115,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         spinnerErlang = new javax.swing.JSpinner();
         jLabel6 = new javax.swing.JLabel();
         textFieldCapacidadEnlace = new javax.swing.JTextField();
-        listaRedes = new javax.swing.JComboBox<>();
+        listaRedes = new javax.swing.JComboBox<String>();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         etiquetaAnchoFSActual1 = new javax.swing.JLabel();
@@ -165,19 +165,19 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaCantRutasReruteadas = new javax.swing.JLabel();
         etiquetaCantDesfrag = new javax.swing.JLabel();
         etiquetaTextoCantDesfrag = new javax.swing.JLabel();
-        ComboMetodoDesfrag = new javax.swing.JComboBox<>();
-        ComboMetodo = new javax.swing.JComboBox<>();
+        ComboMetodoDesfrag = new javax.swing.JComboBox<String>();
+        ComboMetodo = new javax.swing.JComboBox<String>();
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         etiquetaAnchoFSActual26 = new javax.swing.JLabel();
         textFieldRutasARerutear = new javax.swing.JTextField();
         etiquetaAnchoFSActual12 = new javax.swing.JLabel();
         etiquetaTopologia2 = new javax.swing.JLabel();
-        ComboObjetivoReruteo = new javax.swing.JComboBox<>();
+        ComboObjetivoReruteo = new javax.swing.JComboBox<String>();
         jPanel4 = new javax.swing.JPanel();
         etiquetaTopologia1 = new javax.swing.JLabel();
         etiquetaError = new javax.swing.JLabel();
-        ComboObjetivoACO = new javax.swing.JComboBox<>();
+        ComboObjetivoACO = new javax.swing.JComboBox<String>();
         etiquetaAnchoFSActual8 = new javax.swing.JLabel();
         textFieldCantHormigas = new javax.swing.JTextField();
         etiquetaAnchoFSActual20 = new javax.swing.JLabel();
@@ -185,7 +185,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaAnchoFSActual6 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        ComboObjAlgoritmoGenetico = new javax.swing.JComboBox<>();
+        ComboObjAlgoritmoGenetico = new javax.swing.JComboBox<String>();
         jLabel7 = new javax.swing.JLabel();
         jTextFieldCantIndividuosAG = new javax.swing.JTextField();
         label1 = new java.awt.Label();
@@ -200,10 +200,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        listaAlgoritmosRuteo.setModel(new javax.swing.AbstractListModel<String>() {
+        listaAlgoritmosRuteo.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "FA", "FA-CA", "MTLSC" };
             public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+            public Object getElementAt(int i) { return strings[i]; }
         });
         listaAlgoritmosRuteo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listaAlgoritmosRuteo.setToolTipText("");
@@ -276,8 +276,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         textFieldCapacidadEnlace.setText("50");
         getContentPane().add(textFieldCapacidadEnlace, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 120, 50, -1));
 
-        listaRedes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NSFNet", "USNet", "ARPA-2" }));
-        listaRedes.setSelectedIndex(1);
+        listaRedes.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "NSFNet", "USNet", "ARPA-2" }));
         listaRedes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 listaRedesActionPerformed(evt);
@@ -618,7 +617,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaTextoCantDesfrag.setText("Cant. Desfragmentaciones:");
         getContentPane().add(etiquetaTextoCantDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 0, -1, 20));
 
-        ComboMetodoDesfrag.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Peores Rutas", "ACO", "AG" }));
+        ComboMetodoDesfrag.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "AG", "Peores Rutas", "ACO" }));
         ComboMetodoDesfrag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboMetodoDesfragActionPerformed(evt);
@@ -626,7 +625,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         });
         getContentPane().add(ComboMetodoDesfrag, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 440, 140, -1));
 
-        ComboMetodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sin Desfragmentar", "Reactivo", "DT Fijo", "IA" }));
+        ComboMetodo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "IA", "Sin Desfragmentar", "Reactivo", "DT Fijo" }));
         ComboMetodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboMetodoActionPerformed(evt);
@@ -663,7 +662,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaTopologia2.setText("Objetivo Peores Rutas");
         jPanel3.add(etiquetaTopologia2);
 
-        ComboObjetivoReruteo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
+        ComboObjetivoReruteo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
         ComboObjetivoReruteo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboObjetivoReruteoActionPerformed(evt);
@@ -683,7 +682,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         etiquetaError.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jPanel4.add(etiquetaError);
 
-        ComboObjetivoACO.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
+        ComboObjetivoACO.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Entropía", "Path Consecutiveness", "BFR", "MSI" }));
         ComboObjetivoACO.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ComboObjetivoACOActionPerformed(evt);
@@ -728,7 +727,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         jLabel1.setText("Objetivo");
         jPanel6.add(jLabel1);
 
-        ComboObjAlgoritmoGenetico.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "MSI", "BFR" }));
+        ComboObjAlgoritmoGenetico.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BFR", "MSI" }));
         jPanel6.add(ComboObjAlgoritmoGenetico);
 
         jLabel7.setText("Cant. de individuos");
@@ -985,7 +984,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             int sumaTiempoDeVida = 0;
             
             String algoritmoAejecutar = RSA.get(0);
-            
+            ArrayList<Integer> slotsC = new ArrayList<>();
+            ArrayList<Integer> blockedSlots = new ArrayList<>();
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
                 sumSlots = sumBlockedSlots = 0;
@@ -993,7 +993,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
 
-                System.out.println("Tiempo: " + i);
                 
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -1012,6 +1011,25 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         switch (algoritmoAejecutar) {
                             case "FA":
                                 r = Algoritmos_Defrag_ProAct.Def_FA(G[a], demanda, ksp, capacidadPorEnlace);
+                                //---------------------------------------
+                                if(slotsC.size() == 10){
+                                        slotsC.remove(0);
+                                        blockedSlots.remove(0);
+                                }
+                                slotsC.add(demanda.getNroFS());
+                                if(r == null)
+                                    blockedSlots.add(demanda.getNroFS());
+                                else
+                                    blockedSlots.add(0);
+
+                                sumSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumSlots += slotsC.get(k2);
+
+                                sumBlockedSlots = 0;
+                                for(int k2 = 0; k2 < slotsC.size(); k2++)
+                                    sumBlockedSlots += blockedSlots.get(k2);
+                                //------------------------------------------
                                 if (r != null) {//si se pudo establecer la demanda
                                     Utilitarios.asignarFS_Defrag(ksp, r, G[a], demanda, ++conexid[a]);
                                     rutasEstablecidas.add(demanda.getTiempo());
@@ -1022,7 +1040,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     /*Inicio de creacion de estadistica de los bloqueos segun la cantidad de ranuras requeridas*/
                                     
                                     int cantidadRanurasRequeridas = demanda.getNroFS();
-                                    sumBlockedSlots += cantidadRanurasRequeridas;
                                     ranuras[cantidadRanurasRequeridas]+=1;
                                     cantidadTotalBloqueos++;
                                     
@@ -1077,7 +1094,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                     resultadoRuteo.add(r);
                                     listaKSP.add(ksp);
                                 } else {
-                                    sumBlockedSlots += demanda.getNroFS();
                                     if(metodo == "Reactivo" && noLogroEvitar<i){
                                         try {
                                             if (metodoDesfrag == "ACO"){
@@ -1189,7 +1205,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     
                     try {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
-                        System.out.println("ratio: " + ratio);
+                        System.out.println("Tiempo: " + i + ", Ratio: " + ratio);
                         if(ratio >= 0.2) {
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }

@@ -240,7 +240,6 @@
             <StringItem index="2" value="ARPA-2"/>
           </StringArray>
         </Property>
-        <Property name="selectedIndex" type="int" value="1"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listaRedesActionPerformed"/>
@@ -1181,9 +1180,9 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="Peores Rutas"/>
-            <StringItem index="1" value="ACO"/>
-            <StringItem index="2" value="AG"/>
+            <StringItem index="0" value="AG"/>
+            <StringItem index="1" value="Peores Rutas"/>
+            <StringItem index="2" value="ACO"/>
           </StringArray>
         </Property>
       </Properties>
@@ -1203,10 +1202,10 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
-            <StringItem index="0" value="Sin Desfragmentar"/>
-            <StringItem index="1" value="Reactivo"/>
-            <StringItem index="2" value="DT Fijo"/>
-            <StringItem index="3" value="IA"/>
+            <StringItem index="0" value="IA"/>
+            <StringItem index="1" value="Sin Desfragmentar"/>
+            <StringItem index="2" value="Reactivo"/>
+            <StringItem index="3" value="DT Fijo"/>
           </StringArray>
         </Property>
       </Properties>
@@ -1413,8 +1412,8 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="2">
-                <StringItem index="0" value="MSI"/>
-                <StringItem index="1" value="BFR"/>
+                <StringItem index="0" value="BFR"/>
+                <StringItem index="1" value="MSI"/>
               </StringArray>
             </Property>
           </Properties>
