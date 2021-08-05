@@ -1069,7 +1069,6 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                                 } else {
                                     /*Inicio de creacion de estadistica de los bloqueos segun la cantidad de ranuras requeridas*/
                                     int cantidadRanurasRequeridas = demanda.getNroFS();
-                                    sumBlockedSlots += cantidadRanurasRequeridas;
                                     ranuras[cantidadRanurasRequeridas]+=1;
                                     cantidadTotalBloqueos++;
                                     
