@@ -1901,7 +1901,7 @@ public class Utilitarios {
     public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang, int cc, String topo) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado"+ lambda + "k_" + t + "cc_" + cc+ topo + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado_"+ lambda + "_k_" + t + "_cc_" + cc+ topo + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -1909,7 +1909,7 @@ public class Utilitarios {
         if (archivo.exists()) {
             return archivo;
         } else {
-        Integer[] erlangs = {400,450,550,650,700};
+        Integer[] erlangs = {400,450,500,550,600};
         List<Integer> erlangsList = Arrays.asList(erlangs);
         Collections.shuffle(erlangsList);
         int erlangVariado = erlangsList.get(0);
@@ -1931,14 +1931,14 @@ public class Utilitarios {
                         destino = rand.nextInt(cantNodos);
                     }
                     tVida = obtenerTiempoDeVida(HT);
-                    archivo = escribirArchivo(origen, destino, fs, lambda, i, archivo, tVida, cantidadDemandas);
+                    archivo = escribirArchivo(origen, destino, fs, lambda, i, archivo, tVida, cantidadDemandas,erlangVariado);
                 }
             }
             return archivo;
         }
     }
 
-    public static File escribirArchivo(int o, int d, int fs, int lambda, int t, File archivo, int tVida, int cantidadDemandas) throws IOException {
+    public static File escribirArchivo(int o, int d, int fs, int lambda, int t, File archivo, int tVida, int cantidadDemandas,int erlang) throws IOException {
         BufferedWriter bw;
         if (archivo.exists()) {
             bw = new BufferedWriter(new FileWriter(archivo, true));
@@ -1956,6 +1956,8 @@ public class Utilitarios {
         bw.write("" + fs);
         bw.write(",");
         bw.write("" + tVida);
+        bw.write(",");
+        bw.write("" + erlang);
         bw.write("\r\n");
         bw.close();
 
@@ -1970,7 +1972,7 @@ public class Utilitarios {
         BufferedReader br = new BufferedReader(fr);
 
         while (((linea = br.readLine()) != null)) {
-            String[] line = linea.split(",", 6);
+            String[] line = linea.split(",", 7);
             if (Integer.parseInt(line[0]) > t) {
                 break;                          //
             } else if (Integer.parseInt(line[0]) == t) {

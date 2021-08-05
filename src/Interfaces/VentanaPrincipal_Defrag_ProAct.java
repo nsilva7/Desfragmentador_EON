@@ -928,7 +928,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             for(String top: topos){
                 System.out.println("---TOPOLOGÍA: " +  top + "---");
                 
-               for(int cc = 0; cc < 20; cc++){
+               for(int cc = 0; cc < 100; cc++){
                    System.out.println("--CC: " + cc);
                     
                     switch (top) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
