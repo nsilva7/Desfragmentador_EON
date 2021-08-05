@@ -980,7 +980,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     //generar archivo de demandas
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
-                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang,cc,top);
+                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, er,cc,top);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
             }

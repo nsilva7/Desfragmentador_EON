@@ -2096,19 +2096,20 @@ public class Utilitarios {
         } else {
             bw = new BufferedWriter(new FileWriter(archivo));
         }
+
         bw.write("" + tiempo);
         bw.write(",");
         bw.write("" + redondearDecimales(entropia, 6));
         bw.write(",");
-        bw.write("" + redondearDecimales(MSI, 6));
+        bw.write("" + redondearDecimales(pathConsec, 6));
         bw.write(",");
         bw.write("" + redondearDecimales(BFR, 6));
         bw.write(",");
-        bw.write("" + redondearDecimales(pathConsec, 6));
+        bw.write("" + redondearDecimales(shf, 6));
+        bw.write(",");
+        bw.write("" + redondearDecimales(MSI, 6));
         bw.write(",");
         bw.write("" + redondearDecimales(porcUso, 6));
-        bw.write(",");
-        bw.write("" + redondearDecimales(shf, 6));
         bw.write(",");
         bw.write("" + sumSlots);
         bw.write(",");
