@@ -1909,17 +1909,20 @@ public class Utilitarios {
         if (archivo.exists()) {
             return archivo;
         } else {
-        Integer[] erlangs = {400,450,550,650,700};
-        List<Integer> erlangsList = Arrays.asList(erlangs);
-        Collections.shuffle(erlangsList);
-        int erlangVariado = erlangsList.get(0);
+        Integer[] erlangs = {700,100};
+        //List<Integer> erlangsList = Arrays.asList(erlangs);
+        //Collections.shuffle(erlangsList);
+        int erlangVariado = erlangs[0];
         int cambioErlang = (t/erlangs.length);
         HT = erlangVariado/lambda;
             Random rand = new Random();
             for (i = 1; i < t; i++) {
-                if(i % cambioErlang == 0){
-                   erlangVariado = erlangsList.get((int)Math.floor((double) (i)/cambioErlang));
+                if(i < 290 || (i > 700 && i < 990)){
+                   erlangVariado = erlangs[0];
                    HT = erlangVariado/lambda; 
+                }else {
+                    erlangVariado = erlangs[1];
+                   HT = erlangVariado/lambda;
                 }
                 cantidadDemandas = poisson(lambda);
                 for (j = 0; j < cantidadDemandas; j++) {
