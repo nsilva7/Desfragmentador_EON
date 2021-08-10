@@ -922,13 +922,13 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 // obtenidad en cada simulacion
             }
             int cantidadBloqueos = 0;
-            tiempoTotal = 1010;
-            String[] topos = {"EUNet", "NSFNet", "USNet"};
+            tiempoTotal = 1210;
+            String[] topos = {"NSFNet","USNet"};
             //String[] topos = {"NSFNet"};
             for(String top: topos){
                 System.out.println("---TOPOLOGÍA: " +  top + "---");
                 
-               for(int cc = 0; cc < 100; cc++){
+               for(int cc = 0; cc < 50; cc++){
                    System.out.println("--CC: " + cc);
                     
                     switch (top) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
