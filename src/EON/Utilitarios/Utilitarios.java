@@ -1898,10 +1898,10 @@ public class Utilitarios {
     lambda: valor para la distribucion de Poisson
     t: Tiempo de simulacion
     minFS y maxFS: Rango de variacion de cantidad de FS por demanda    */
-    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang) throws IOException {
+    public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang, int cc) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado_cc"+ "_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -1963,6 +1963,32 @@ public class Utilitarios {
         bw.write("" + erlang);
         bw.write("\r\n");
         bw.close();
+
+        return archivo;
+    }
+
+public static File escribirEstadistica(File archivo,double[][] estadisticas) throws IOException {
+        BufferedWriter bw;
+        if (archivo.exists()) {
+            bw = new BufferedWriter(new FileWriter(archivo, true));
+        } else {
+            bw = new BufferedWriter(new FileWriter(archivo));
+            bw.write("sin_desfragmentar_bloqueos,dt_fijo_bloqueos,ia_bloqueos,dt_fijo_reruteos,ia_reruteos");
+            bw.write("\r\n");
+        }
+        bw.write("" + estadisticas[0][0]);
+        bw.write(",");
+        bw.write("" + estadisticas[1][0]);
+        bw.write(",");
+        bw.write("" + estadisticas[2][0]);
+        bw.write(",");
+        bw.write("" + estadisticas[1][2]);
+        bw.write(",");
+        bw.write("" + estadisticas[2][2]);
+       
+        bw.write("\r\n");
+        bw.close();
+        
 
         return archivo;
     }
@@ -3455,6 +3481,7 @@ public class Utilitarios {
         Cromosoma cr = new Cromosoma();
         boolean grafoInicial = false;
         //Selecciona el objetivo del algoritmo AG
+        
         switch (objetivoAG) {
               case "BFR":
                     porBfr = true;

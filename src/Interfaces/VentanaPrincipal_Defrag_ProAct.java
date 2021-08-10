@@ -783,8 +783,16 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaDemandasTotales.setVisible(false);
 //        this.etiquetaTextoBloqueosTotales.setVisible(false);
 //        this.etiquetaBloqueosTotales.setVisible(false);
+        String[] formas = { "Sin Desfragmentar", "DT Fijo", "IA" };
+        int[] periodo = {50,100,150,200};
+        for(int cc = 0;cc < 50;cc++){
+            for(int variacion = 0;variacion < 50;variacion++){
+            System.out.println("-----------CC-"+cc+"---------------");
+            double [][] estadisticas = new double[3][3];
+        for(int f = 0;f < 3; f++){
+            System.out.println("------------"+formas[f]+"---------------");
+//evita desfragmentar cuando hay muchos bloqueos
 
-        //evita desfragmentar cuando hay muchos bloqueos
         int noLogroEvitar = -1, yaDesfragmento = -1;
                 
         this.etiquetaError.setText("Simulando...");
@@ -813,10 +821,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         
         //método
         this.metodo = (String) this.ComboMetodo.getSelectedItem(); 
+        this.metodo = formas[f];
         
         //desfrag metodo
         String metodoDesfrag = (String) this.ComboMetodoDesfrag.getSelectedItem();
-        
+        metodoDesfrag = "AG";
         //Peores rutas
         String ObjetivoReruteo = (String) this.ComboObjetivoReruteo.getSelectedItem();
         double porcRutasARerutear = Double.parseDouble(this.textFieldRutasARerutear.getText());
@@ -828,12 +837,14 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         
         //Parámetros AG
         int porcentajeLongCRAG = Integer.parseInt(this.jTextFieldMejoraAG.getText());
+        porcentajeLongCRAG = 40;
         int cantIndividuosAG = Integer.parseInt(this.jTextFieldCantIndividuosAG.getText());
         String objetivoAG = (String) this.ComboObjAlgoritmoGenetico.getSelectedItem(); 
+        objetivoAG = "BFR";
         int cantGeneracionesAG = Integer.parseInt(this.jTextFieldCantGeneraciones.getText());
         //int porcentajeMejora = Integer.parseInt(this.jTextField1.getText()); 
         //leemos los valores seteados
-        this.tiempoTotal = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
+        this.tiempoTotal = 1200; //Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); //Tiempo de simulacion indicado por el usuario
         this.redSeleccionada = (String) this.listaRedes.getSelectedItem(); // obtenemos la topologia seleccionada en letras
         
         this.anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de los FSs de la toplogia elegida, tambien indicado por el usuario
@@ -864,7 +875,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         this.cantidadDeAlgoritmosTotalSeleccionados++;
         
         //parámetros desfragmentación
-        int periodoDesfrag = Integer.parseInt(this.textFieldPeriodoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
+        int periodoDesfrag = periodo[variacion];//Integer.parseInt(this.textFieldPeriodoDesfrag.getText()); //Tiempo de simulacion indicado por el usuario
         int ultimoDesfrag = periodoDesfrag;
         
 
@@ -895,7 +906,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         int tiempoT = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); // Tiempo de simulacion especificada por el usaurio
         double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
-
+        
         System.out.println("El ancho del FS es:" + anchoFS);
         System.out.println("Cantidad de FS por enlace:" + capacidadPorEnlace);
         System.out.println("Cantidad Algoritmos:" + this.cantidadDeAlgoritmosTotalSeleccionados);
@@ -921,7 +932,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 prob[i] = new LinkedList(); // para cada algoritmo, se tiene una lista enlazada que almacenara la Pb 
                 // obtenidad en cada simulacion
             }
-
+            redSeleccionada="NSFNet";
             switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
                     topologia = this.Redes.getTopologia(0);
@@ -958,7 +969,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             //generar archivo de demandas
             try {
                 //while (earlang <= E) { // mientras no se llega a la cargad de trafico maxima
-                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang);
+                archivoDemandas = Utilitarios.generarArchivoDemandas(Lambda, tiempoTotal, FsMinimo, FsMaximo, G[0].getCantidadDeVertices(), HoldingTime, Erlang,cc);
             } catch (IOException ex) {
                 Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -975,12 +986,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Resultado"+detallesNombre;
             String rutaDefrag = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Defrag"+detallesNombre;
             String rutaEstados = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Resultados\\Estados"+detallesNombre;
+            
+        
             if (!carpeta.exists()) {
                 carpeta.mkdirs();
             }
             File archivoResultados = new File(ruta);
             File archivoDefrag = new File(rutaDefrag);
             File archivoEstados = new File(rutaEstados);
+            
             
             int sumaTiempoDeVida = 0;
             
@@ -1204,11 +1218,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
                 
                 if(metodo == "IA") {
-                    
+                    double[] ratios = {0.165,0.17,0.175,0.18};
                     try {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
                         System.out.println("ratio: " + ratio);
-                        if(ratio >= 0.22) {
+                        if(ratio >= ratios[variacion]) {
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }
                         
@@ -1274,6 +1288,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 System.out.println("  "+aux+"\t\t"+ranuras[aux] );       
             }
             System.out.println("\nLa  cantidad de bloqueos total : "+cantidadTotalBloqueos );
+            
+            estadisticas[f][0] = cantidadTotalBloqueos;
             
             
             /*Fin de la impresion de la estadistica de bloqueos*/
@@ -1412,6 +1428,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 }
 
                 //imprime los resultados en la pantalla
+              
+                 estadisticas[f][1] = resultDefrags[0];
+                 estadisticas[f][2] = resultDefrags[1];
+               
                 this.etiquetaCantDesfrag.setText("" + resultDefrags[0]);
                 this.etiquetaCantRutasReruteadas.setText("" + resultDefrags[1]);
             }
@@ -1455,6 +1475,20 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             }
             if (mensajeError != "Seleccione ") {
                 this.etiquetaError.setText(mensajeError);
+            }
+        }
+        }
+            
+        
+            String rutaEstadisticas = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Estadistica\\datos_estadisticos_"+redSeleccionada+".csv";
+
+            File archivoEstadisticas = new File(rutaEstadisticas);
+            try{
+                Utilitarios.escribirEstadistica(archivoEstadisticas,estadisticas);
+            }catch(Exception e) {
+                System.out.println("ERROR");
+            }
+          
             }
         }
     }//GEN-LAST:event_botonEjecutarSimulacionActionPerformed
