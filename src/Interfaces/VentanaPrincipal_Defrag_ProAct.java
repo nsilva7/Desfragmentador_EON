@@ -783,14 +783,17 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaDemandasTotales.setVisible(false);
 //        this.etiquetaTextoBloqueosTotales.setVisible(false);
 //        this.etiquetaBloqueosTotales.setVisible(false);
-        String[] formas = { "Sin Desfragmentar", "DT Fijo", "IA" };
-        int[] periodo = {50,100,150,200};
-        for(int cc = 0;cc < 50;cc++){
-            for(int variacion = 0;variacion < 50;variacion++){
+        String[] formas = { "Sin Desfragmentar", "DT Fijo", "IA", "Metrica" };
+        int[] periodo = {/*50,*/100,150,200};
+        double[] ratiosMet = {/*0.71, */0.735, 0.76, 0.785};
+        double[] ratios = {0.165,0.17,0.175/*,0.18*/};
+        for(int cc = 0;cc < 15;cc++){
             System.out.println("-----------CC-"+cc+"---------------");
-            double [][] estadisticas = new double[3][3];
-        for(int f = 0;f < 3; f++){
-            System.out.println("------------"+formas[f]+"---------------");
+            for(int variacion = 0;variacion < ratios.length;variacion++){
+                System.out.println("Variación: "+variacion);
+                double [][] estadisticas = new double[4][3];
+                for(int f = 0;f < formas.length; f++){
+                    System.out.println("------------"+formas[f]+"---------------");
 //evita desfragmentar cuando hay muchos bloqueos
 
         int noLogroEvitar = -1, yaDesfragmento = -1;
@@ -907,9 +910,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
         
-        System.out.println("El ancho del FS es:" + anchoFS);
-        System.out.println("Cantidad de FS por enlace:" + capacidadPorEnlace);
-        System.out.println("Cantidad Algoritmos:" + this.cantidadDeAlgoritmosTotalSeleccionados);
+        //System.out.println("El ancho del FS es:" + anchoFS);
+        //System.out.println("Cantidad de FS por enlace:" + capacidadPorEnlace);
+        //System.out.println("Cantidad Algoritmos:" + this.cantidadDeAlgoritmosTotalSeleccionados);
 
         //if(this.listaDemandas.getSelectedIndex()>=0 && this.listaAlgoritmosRuteo.getSelectedIndex()>=0 && 
         //        this.listaRedes.getSelectedIndex()>=0 && this.listaAlgoritmosAS.getSelectedIndex()>=0 && this.cantidadDeAlgoritmosTotalSeleccionados >0){ // si todos los parametros fueron seleccionados
@@ -932,7 +935,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 prob[i] = new LinkedList(); // para cada algoritmo, se tiene una lista enlazada que almacenara la Pb 
                 // obtenidad en cada simulacion
             }
-            redSeleccionada="NSFNet";
+            redSeleccionada="USNet";
             switch (redSeleccionada) { // cargamos los datos en las matrices de adyacencia segun la topologia seleccionada
                 case "Red 0":
                     topologia = this.Redes.getTopologia(0);
@@ -1008,7 +1011,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //                System.out.println("Grafo al empezar el tiempo: " + i);
 //                Utilitarios.actualizarTablaEstadoEnlaces(G[0],this.jTableEstadoEnlaces,capacidadPorEnlace);
 
-                System.out.println("Tiempo: " + i);
+                if(i % 100 == 0)
+                    System.out.println("Tiempo: " + i);
                 
                 try {
                     demandasPorUnidadTiempo = Utilitarios.leerDemandasPorTiempo(archivoDemandas, i); //lee las demandas para el tiempo i
@@ -1217,11 +1221,21 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 
                 }
                 
+                if(metodo == "Metrica"){
+                     //System.out.println("Tiempo: " + i + ", BFR: " + bfr);
+                    try {
+                        if(bfr >= ratiosMet[variacion]){
+                            encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
+                        }  
+                    } catch (IOException ex) {
+                        Logger.getLogger(VentanaPrincipal_Defrag_ProAct.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
                 if(metodo == "IA") {
-                    double[] ratios = {0.165,0.17,0.175,0.18};
                     try {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
-                        System.out.println("ratio: " + ratio);
+                        //System.out.println("ratio: " + ratio);
                         if(ratio >= ratios[variacion]) {
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }
@@ -1237,7 +1251,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     if(i == ultimoDesfrag && i != tiempoTotal){// cada periodo y que no haga si es el ultimo tiempo
                         ultimoDesfrag = ultimoDesfrag + periodoDesfrag;
                         try {
-                            System.out.println("Inicia desfragmentacion en tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
+                            //System.out.println("Inicia desfragmentacion en tiempo "+i+" con "+arrayRutas.size()+" rutas activas");
                             if (metodoDesfrag == "ACO"){
                                 encontroSolucion = Utilitarios.desfragmentacionACO(topologia,RSA.get(0), resultadoRuteo, arrayRutas, mejoraACO, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i, cantHormACO, caminosDeDosEnlaces, this.jTableEstadoEnlaces, FSMinPC, objetivoACO);
                             }else if(metodoDesfrag.equals("AG")){
@@ -1283,11 +1297,11 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             /*Inicio de impresion de  los datos de los estadisticos de boqueos*/
             
             
-            System.out.println("\nRanuras   Cantidad de Bloqueos\n");
+            //System.out.println("\nRanuras   Cantidad de Bloqueos\n");
             for(int aux=1;aux < ranuras.length; aux++){
-                System.out.println("  "+aux+"\t\t"+ranuras[aux] );       
+                //System.out.println("  "+aux+"\t\t"+ranuras[aux] );       
             }
-            System.out.println("\nLa  cantidad de bloqueos total : "+cantidadTotalBloqueos );
+            //System.out.println("\nLa  cantidad de bloqueos total : "+cantidadTotalBloqueos );
             
             estadisticas[f][0] = cantidadTotalBloqueos;
             
@@ -1296,7 +1310,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             // almacenamos la probablidad de bloqueo final para cada algoritmo
             for (int a = 0; a < RSA.size(); a++) {
                 prob[a].add(((double) contB[a] / contD));
-                System.out.println("Probabilidad: " + (double) prob[a].get(k) + " Algoritmo: " + RSA.get(a));
+                //System.out.println("Probabilidad: " + (double) prob[a].get(k) + " Algoritmo: " + RSA.get(a));
             }
             this.etiquetaError.setText("Simulacion Terminada...");
             
@@ -1322,7 +1336,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             //RESULTADOS
             
             //suma de tiempos de vida
-            System.out.println("Suma de tiempos de vida: " + sumaTiempoDeVida);
+            //System.out.println("Suma de tiempos de vida: " + sumaTiempoDeVida);
 
             // una vez finalizado, graficamos el resultado.
             //leemos el archivo de resultados

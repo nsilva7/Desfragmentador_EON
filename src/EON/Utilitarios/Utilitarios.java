@@ -1973,7 +1973,7 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
             bw = new BufferedWriter(new FileWriter(archivo, true));
         } else {
             bw = new BufferedWriter(new FileWriter(archivo));
-            bw.write("sin_desfragmentar_bloqueos,dt_fijo_bloqueos,ia_bloqueos,dt_fijo_reruteos,ia_reruteos");
+            bw.write("sin_desfragmentar_bloqueos,dt_fijo_bloqueos,ia_bloqueos,me_bloqueos, dt_fijo_reruteos,ia_reruteos,me_reruteos");
             bw.write("\r\n");
         }
         bw.write("" + estadisticas[0][0]);
@@ -1982,9 +1982,13 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
         bw.write(",");
         bw.write("" + estadisticas[2][0]);
         bw.write(",");
+        bw.write("" + estadisticas[3][0]);
+        bw.write(",");
         bw.write("" + estadisticas[1][2]);
         bw.write(",");
         bw.write("" + estadisticas[2][2]);
+        bw.write(",");
+        bw.write("" + estadisticas[3][2]);
        
         bw.write("\r\n");
         bw.close();
@@ -3627,7 +3631,7 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
                 }
             }
         }
-    System.out.println("La mejor solucion de la generacion  : " +cantGeneraciones+" - "+poblacionActual.get(0).getMejora());
+    //System.out.println("La mejor solucion de la generacion  : " +cantGeneraciones+" - "+poblacionActual.get(0).getMejora());
         return poblacionActual.get(0).getMejora();
     }
     
