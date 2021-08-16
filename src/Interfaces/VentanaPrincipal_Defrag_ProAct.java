@@ -784,13 +784,15 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaTextoBloqueosTotales.setVisible(false);
 //        this.etiquetaBloqueosTotales.setVisible(false);
         String[] formas = { "Sin Desfragmentar", "DT Fijo", "IA", "Metrica" };
+        //String[] formas = { "IA"};
         int[] periodo = {/*50,*/100,150,200};
         double[] ratiosMet = {/*0.71, */0.735, 0.76, 0.785};
-        double[] ratios = {0.165,0.17,0.175/*,0.18*/};
-        for(int cc = 0;cc < 15;cc++){
+        double[] ratios = {0.3,0.35,0.4/*,0.18*/};
+        for(int cc = 0;cc < 10;cc++){
             System.out.println("-----------CC-"+cc+"---------------");
             for(int variacion = 0;variacion < ratios.length;variacion++){
                 System.out.println("Variación: "+variacion);
+                    
                 double [][] estadisticas = new double[4][3];
                 for(int f = 0;f < formas.length; f++){
                     System.out.println("------------"+formas[f]+"---------------");
@@ -1004,6 +1006,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String algoritmoAejecutar = RSA.get(0);
              ArrayList<Integer> slotsC = new ArrayList<>();
             ArrayList<Integer> blockedSlots = new ArrayList<>();
+            int cDefrag = 0;
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
             
@@ -1237,6 +1240,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
                         //System.out.println("ratio: " + ratio);
                         if(ratio >= ratios[variacion]) {
+                            cDefrag++;
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }
                         
@@ -1293,6 +1297,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 contBloqueos = 0;
                 
             }
+            if(metodo == "IA")
+                 System.out.println("Cantidad de desfragmentaciones: " + cDefrag + ", para ratio= " + ratios[variacion] + ", en cc = " + cc); 
             ++k;
             /*Inicio de impresion de  los datos de los estadisticos de boqueos*/
             

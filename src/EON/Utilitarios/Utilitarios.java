@@ -1901,7 +1901,7 @@ public class Utilitarios {
     public static File generarArchivoDemandas(int lambda, int t, int minFS, int maxFS, int cantNodos, int HT, int erlang, int cc) throws IOException {
         int i, cantidadDemandas, j, origen, destino, fs, tVida;
         File carpeta = new File(System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\");
-        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado_cc"+ "_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
+        String ruta = System.getProperty("user.dir") + "\\src\\Defrag\\ProAct\\Archivos\\Requerimientos\\req_Erlang_Variado_cc" + cc + "_"+ lambda + "k_" + t + "t_" + minFS + "-" + maxFS + "FS.txt";
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
@@ -3752,12 +3752,12 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
         double ratio = 0; 
         String json = "{" + 
                                   "\"entropy\": " + entropy + 
-                                 ",\"pc\":" + pc + 
+                                 ",\"pc\":" + pc +  
+                                 ",\"bfr\":" + bfr + 
                                  ",\"shf\":" + shf  + 
                                  ",\"msi\":" + msi + 
                                  ",\"used\":" + used + 
-                                 ",\"blocked\":" + blockedSlots + 
-                                 ",\"bfr\":" + bfr + 
+                                 ",\"blocked\":" + blockedSlots +
                                  "}"; 
         URL url = new URL("http://127.0.0.1:5000/estimador/ratio"); 
         HttpURLConnection con = (HttpURLConnection) url.openConnection(); 
