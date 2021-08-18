@@ -1909,21 +1909,33 @@ public class Utilitarios {
         if (archivo.exists()) {
             return archivo;
         } else {
-        Integer[] erlangs = {700,100};
-        //List<Integer> erlangsList = Arrays.asList(erlangs);
-        //Collections.shuffle(erlangsList);
+        Integer[] erlangsSBSB = {700,100};
+        Integer[] erlangsSB = {200,700,100};
+        String tipoDem = "SBS";
+        Integer[] erlangs = ("SB".equals(tipoDem)) ? erlangsSB : erlangsSBSB;
+   
         int erlangVariado = erlangs[0];
         int cambioErlang = (t/erlangs.length);
         HT = erlangVariado/lambda;
             Random rand = new Random();
             for (i = 1; i < t; i++) {
-                if(i < 290 || (i > 700 && i < 990)){
-                   erlangVariado = erlangs[0];
-                   HT = erlangVariado/lambda; 
-                }else {
-                    erlangVariado = erlangs[1];
-                   HT = erlangVariado/lambda;
+                if(tipoDem == "SBS" || tipoDem == "SBSB"){
+                    if(i < 290 || (i > 700 && i < 990)){
+                       erlangVariado = erlangs[0];
+                    }else {
+                       erlangVariado = erlangs[1];
+                    }
                 }
+                if(tipoDem == "SB"){
+                    if( i < 150 || ( i > 500 && i < 800))
+                       erlangVariado = erlangs[0];
+                    else if( i > 800)
+                        erlangVariado = erlangs[2];
+                    else
+                        erlangVariado = erlangs[1];
+                }
+                
+                HT = erlangVariado/lambda; 
                 cantidadDemandas = poisson(lambda);
                 for (j = 0; j < cantidadDemandas; j++) {
                     rand = new Random();
@@ -2216,9 +2228,9 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
         datos = new XYSeriesCollection();
         
         // create subplot 7...
-        datos.addSeries(series[7]);
+        datos.addSeries(series[11]);
         final XYItemRenderer renderer7 = new StandardXYItemRenderer();
-        final NumberAxis rangeAxis7 = new NumberAxis("% Uso");
+        final NumberAxis rangeAxis7 = new NumberAxis("RATIO");
         rangeAxis7.setAutoRangeIncludesZero(false);
         final XYPlot subplot7 = new XYPlot(datos, null, rangeAxis7, renderer7);
         subplot7.setRangeAxisLocation(AxisLocation.TOP_OR_LEFT);
@@ -2226,7 +2238,7 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
 
         //agrega los bloqueos
         //for (int a = 0; a < annotation.size(); a++) {
-        for (XYTextAnnotation anno : annotation) {
+        /*for (XYTextAnnotation anno : annotation) {
             anno.setFont(new Font("SansSerif", Font.PLAIN, 15));
             //anno.setRotationAngle(Math.PI / 4.0);
             subplot1.addAnnotation(anno);
@@ -2248,7 +2260,7 @@ public static File escribirEstadistica(File archivo,double[][] estadisticas) thr
             subplot5.addDomainMarker(marker);
             subplot6.addDomainMarker(marker);
             subplot7.addDomainMarker(marker);
-        }
+        }*/
 
 
         // parent plot...

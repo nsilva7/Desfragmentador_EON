@@ -783,14 +783,18 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
 //        this.etiquetaDemandasTotales.setVisible(false);
 //        this.etiquetaTextoBloqueosTotales.setVisible(false);
 //        this.etiquetaBloqueosTotales.setVisible(false);
+        
         String[] formas = { "Sin Desfragmentar", "DT Fijo", "IA", "Metrica" };
-        //String[] formas = { "IA"};
-        int[] periodo = {/*50,*/100,150,200};
-        double[] ratiosMet = {/*0.71, */0.735, 0.76, 0.785};
-        double[] ratios = {0.3,0.35,0.4/*,0.18*/};
-        for(int cc = 0;cc < 10;cc++){
+        int[] periodo = {100,150,200};
+        double[] ratiosMet = {0.72, 0.74, 0.76}; 
+        //double[] ratios = {0.2, 0.21, 0.22};//USNET SBSB
+        double[] ratios = {0.18, 0.195, 0.21};//USNET SBS
+        ArrayList<Double> predicciones = new ArrayList<Double>();
+        int p = 0;
+        
+        for(int cc = 0;cc < 1;cc++){
             System.out.println("-----------CC-"+cc+"---------------");
-            for(int variacion = 0;variacion < ratios.length;variacion++){
+            for(int variacion = 0;variacion < 1;variacion++){
                 System.out.println("Variación: "+variacion);
                     
                 double [][] estadisticas = new double[4][3];
@@ -909,6 +913,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
         //int paso = (int) this.spinnerPaso.getValue(); // siguiente carga de trafico a simular (Erlang)
         int contD = 0; // contador de demandas totales
         int tiempoT = Integer.parseInt(this.spinnerTiempoSimulacion.getValue().toString()); // Tiempo de simulacion especificada por el usaurio
+        tiempoT = 950;//SBS
+        //tiempoT = 1350;//SBSB
+        //tiempoT = 1000;//SB
+        this.tiempoTotal = tiempoT;
         double anchoFS = Double.parseDouble(this.textFieldAnchoFS.getText()); // ancho de FS
         //factor del tiempo de simulacion especificado por el usuario
         
@@ -1006,7 +1014,8 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
             String algoritmoAejecutar = RSA.get(0);
              ArrayList<Integer> slotsC = new ArrayList<>();
             ArrayList<Integer> blockedSlots = new ArrayList<>();
-            int cDefrag = 0;
+            int cDefragIA = 0;
+            int cDefragME = 0;
             for (int i = 1; i <= tiempoT; i++) {
                 haybloqueos = false;
             
@@ -1228,6 +1237,7 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                      //System.out.println("Tiempo: " + i + ", BFR: " + bfr);
                     try {
                         if(bfr >= ratiosMet[variacion]){
+                            cDefragME++;
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }  
                     } catch (IOException ex) {
@@ -1238,9 +1248,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 if(metodo == "IA") {
                     try {
                         double ratio = Utilitarios.getRatioIA(entropia,pathConsec, shf, msi, porcUso, sumBlockedSlots, bfr);
+                        predicciones.add(ratio);
                         //System.out.println("ratio: " + ratio);
                         if(ratio >= ratios[variacion]) {
-                            cDefrag++;
+                            cDefragIA++;
                             encontroSolucionAG = Utilitarios.desfragmentacionAG(topologia,RSA.get(0), resultadoRuteo, arrayRutas, porcentajeLongCRAG, capacidadPorEnlace, G[0], listaKSP, archivoDefrag, i,cantIndividuosAG,objetivoAG,cantGeneracionesAG);
                         }
                         
@@ -1298,7 +1309,9 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                 
             }
             if(metodo == "IA")
-                 System.out.println("Cantidad de desfragmentaciones: " + cDefrag + ", para ratio= " + ratios[variacion] + ", en cc = " + cc); 
+                System.out.println("Cantidad de desfragmentaciones: " + cDefragIA + ", para ratio= " + ratios[variacion] + ", en cc = " + cc); 
+            else if(metodo == "Metrica")
+                System.out.println("Cantidad de desfragmentaciones: " + cDefragME + ", para ratio= " + ratiosMet[variacion] + ", en cc = " + cc); 
             ++k;
             /*Inicio de impresion de  los datos de los estadisticos de boqueos*/
             
@@ -1397,7 +1410,10 @@ public class VentanaPrincipal_Defrag_ProAct extends javax.swing.JFrame {
                     series[8].add(contLinea, (double) Double.parseDouble(line[10]));
                     series[9].add(contLinea, (int)Integer.parseInt(line[11]));
                     series[10].add(contLinea, (int)Integer.parseInt(line[12]));
-                    series[11].add(contLinea, (double) Double.parseDouble(line[13]));
+                    if(metodo == "IA")
+                        series[11].add(contLinea, predicciones.get(contLinea - 1));
+                    else
+                        series[11].add(contLinea, (double) Double.parseDouble(line[13]));
                 }
                 
                 //hallar el max y min de los resultados
